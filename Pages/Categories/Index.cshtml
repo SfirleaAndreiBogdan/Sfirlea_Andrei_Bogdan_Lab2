@@ -1,4 +1,4 @@
-﻿@page
+﻿@page "{id:int?}"
 @model Sfirlea_Andrei_Bogdan_Lab2.Pages.Categories.IndexModel
 
 @{
@@ -20,12 +20,19 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.Category) {
-        <tr>
+        @foreach (var item in Model.CategoryData.Categories)
+        {
+            string selectedRow = "";
+            if (item.Id == Model.CategoryID)
+            {
+                selectedRow = "table-success";
+            }
+            <tr class="@selectedRow">
             <td>
                 @Html.DisplayFor(modelItem => item.CategoryName)
             </td>
             <td>
+                    <a asp-page="./Index" asp-route-id="@item.Id">Select</a> |
                 <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
                 <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
                 <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
@@ -34,3 +41,35 @@
 }
     </tbody>
 </table>
+
+@if (Model.CategoryData.Books != null)
+{
+    <h3>Books Selected by Category</h3>
+    <table class="table">
+        @foreach (var item in Model.CategoryData.Categories)
+        {
+            string selectedRow = "";
+            if (item.Id == Model.CategoryID)
+            {
+                selectedRow = "table-success";
+            }
+            <tr class="@selectedRow">
+                <td>
+                    @{
+
+                        foreach (var bookCategory in item.BookCategories)
+                        {
+                            var book = bookCategory.Book;
+                            if (book != null)
+                            {
+                                @book.Title @: @book.Authors.FullName
+                                <br />
+                            }
+                        }
+                    }
+                </td>
+            </tr>
+        }
+    </table>
+}
+
